@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include "util.hpp"
 
@@ -12,23 +13,24 @@ std::string latex_to_logic(const std::string& latex) {
     std::string logic;
     for(int i = 0; i < latex.size(); ++i) {
         if (latex[i] == '\\') {
-            if(latex.substr(i, 2) == "\\land") {
+            i++;
+            if(latex.substr(i, 4) == "land") {
                 logic += "&"; // Convert \and to &
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\lor") {
+                i += 4; // Skip the next character
+            } else if(latex.substr(i, 3) == "lor") {
                 logic += "|"; // Convert \or to |
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\lnot") {
+                i += 3; // Skip the next character
+            } else if(latex.substr(i, 4) == "lnot") {
                 logic += "!"; // Convert \not to !
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\implies") {
+                i += 4; // Skip the next character
+            } else if(latex.substr(i, 7) == "implies") {
                 logic += "->"; // Convert \implies to ->
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 3) == "\\equiv") {
+                i += 7; // Skip the next character
+            } else if(latex.substr(i, 3) == "iff") {
                 logic += "<->"; // Convert \equiv to <-> 
-                i += 2; // Skip the next two characters
-            } else if(latex[i] == '\\') {
-                logic += '\\'; // Keep the backslash if it's not a recognized command
+                i += 3; // Skip the next two characters
+            } else{
+                throw std::invalid_argument("Unknown LaTeX command, error at position: \\" + i);
             }
             
         } else {
