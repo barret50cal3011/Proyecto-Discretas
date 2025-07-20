@@ -11,3 +11,4 @@ bool isSingleLowerAlpha(const std::string& str);
 // @param latex The LaTeX formatted string to convert.
 // @return A string representing the logical expression.
 std::string latex_to_logic(const std::string& latex);
+std::string read_file(const std::string& filename);

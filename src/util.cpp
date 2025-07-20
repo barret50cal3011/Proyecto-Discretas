@@ -3,6 +3,9 @@
 
 #include "util.hpp"
 
+#include <fstream>
+#include <iostream>
+
 bool isSingleLowerAlpha(const std::string& str) {
     return str.size() == 1 && str[0] >= 'a' && str[0] <= 'z';
 }
@@ -10,30 +13,55 @@ bool isSingleLowerAlpha(const std::string& str) {
 
 std::string latex_to_logic(const std::string& latex) {
     std::string logic;
-    for(int i = 0; i < latex.size(); ++i) {
+    size_t i = 0;
+
+    while (i < latex.size()) {
         if (latex[i] == '\\') {
-            if(latex.substr(i, 2) == "\\land") {
-                logic += "&"; // Convert \and to &
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\lor") {
-                logic += "|"; // Convert \or to |
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\lnot") {
-                logic += "!"; // Convert \not to !
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 2) == "\\implies") {
-                logic += "->"; // Convert \implies to ->
-                i += 1; // Skip the next character
-            } else if(latex.substr(i, 3) == "\\equiv") {
-                logic += "<->"; // Convert \equiv to <-> 
-                i += 2; // Skip the next two characters
-            } else if(latex[i] == '\\') {
-                logic += '\\'; // Keep the backslash if it's not a recognized command
+            // Detectar comandos de LaTeX
+            if (latex.compare(i, 5, "\\lnot") == 0) {
+                logic += "!";
+                i += 5;
+            } else if (latex.compare(i, 5, "\\land") == 0) {
+                logic += "&";
+                i += 5;
+            } else if (latex.compare(i, 4, "\\lor") == 0) {
+                logic += "|";
+                i += 4;
+            } else if (latex.compare(i, 8, "\\implies") == 0) {
+                logic += "->";
+                i += 8;
+            } else if (latex.compare(i, 7, "\\equiv") == 0) {
+                logic += "<->";
+                i += 7;
+            } else {
+                // Si no es un comando conocido, solo se agrega el backslash
+                logic += "\\";
+                i++;
             }
-            
         } else {
-            logic += latex[i]; // Add regular characters directly
+            // Agrega directamente cualquier otro carácter (como variables, paréntesis, comas, etc.)
+            logic += latex[i];
+            i++;
         }
     }
+
     return logic;
 }
+
+std::string read_file(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string content;
+    if (!file.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << filename << std::endl;
+        return "";
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        content += line + " ";
+    }
+
+    file.close();
+    return content;
+}
+
