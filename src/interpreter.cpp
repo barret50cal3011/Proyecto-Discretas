@@ -56,53 +56,48 @@ std::vector<std::string> add_parentheses(const std::vector<std::string>& tokens)
 
     // not ! Priority 2
     for (size_t i = 0; i < result.size(); ++i) {
-        if ((result[i] == "!")) {
+        if (result[i] == "!") {
             if (isSingleLowerAlpha(result[i + 1])) {
-                result.insert(result.begin() + i, "(");
+                // Cambiar de (!a) a !(a)
+                result.insert(result.begin() + i + 1, "(");
                 result.insert(result.begin() + i + 3, ")");
-                i += 3; // Skip over the newly added parentheses
+                i += 3;
             } else if (result[i + 1] == "(") {
-                result.insert(result.begin() + i, "(");
+                // Buscar final de subexpresión y poner paréntesis alrededor, dejando ! afuera
                 int depth = 1;
-                for (int j = i + 2; j < (int)result.size(); ++j) {
-                    if (result[j] == "(") {
-                        depth++;
-                    } else if (result[j] == ")") {
-                        depth--;
-                    }
-                    if (depth == 0) {
-                        result.insert(result.begin() + j + 1, ")");
-                        break;
-                    }
+                size_t j = i + 2;
+                for (; j < result.size(); ++j) {
+                    if (result[j] == "(") depth++;
+                    else if (result[j] == ")") depth--;
+                    if (depth == 0) break;
                 }
-                i++; // Skip over the newly added opening parenthesis
+                result.insert(result.begin() + i + 1, "("); // después del !
+                result.insert(result.begin() + j + 2, ")"); // después del cierre de subexpresión
+                i += 2;
             } else if (result[i + 1] == "!") {
-                result.insert(result.begin() + i, "(");
-                for (size_t j = i + 1; j < result.size(); ++j) {
-                    if (result[j] == "!") {
-                        j += 1; // Skip over the newly added closing parenthesis
-                    } else if (result[j] == "(") {
-                        int depth = 1;
-                        for (size_t k = j + 1; k < result.size(); ++k) {
-                            if (result[k] == "(") {
-                                depth++;
-                            } else if (result[k] == ")") {
-                                depth--;
-                            }
-                            if (depth == 0) {
-                                result.insert(result.begin() + k + 1, ")");
-                                break;
-                            }
-                        }
-                    }else if (isSingleLowerAlpha(result[j])) {
-                        result.insert(result.begin() + j + 1, ")");
-                        break; // Exit the loop after processing the first single lower alpha
+                // encadenamiento de negaciones, ej: !!a -> !(!(a))
+                size_t j = i + 1;
+                while (result[j] == "!") j++;
+                if (isSingleLowerAlpha(result[j])) {
+                    result.insert(result.begin() + j, "(");
+                    result.insert(result.begin() + j + 2, ")");
+                    i = j + 2;
+                } else if (result[j] == "(") {
+                    int depth = 1;
+                    size_t k = j + 1;
+                    for (; k < result.size(); ++k) {
+                        if (result[k] == "(") depth++;
+                        else if (result[k] == ")") depth--;
+                        if (depth == 0) break;
                     }
+                    result.insert(result.begin() + j, "(");
+                    result.insert(result.begin() + k + 2, ")");
+                    i = k + 2;
                 }
-                i++;
             }
         }
     }
+
 
     // and, or, |, & Priority 3
     for (size_t i = 0; i < result.size(); ++i) {
