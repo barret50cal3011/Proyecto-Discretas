@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 #include "util.hpp"
 
@@ -81,4 +82,17 @@ std::vector<std::vector<std::string>> create_table(const std::string& str) {
         row.insert(row.end(), digits.begin(), digits.end());
         table.push_back(row);
     }
+}
+
+
+void print_table(const std::vector<std::vector<std::string>>& table) {
+    std::string out;
+    for (const auto& row : table) {
+        for (const auto& cell : row) {
+            out.append(cell + " ");
+        }
+        out.append("\n");
+    }
+
+    std::cout << out;
 }

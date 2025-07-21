@@ -21,3 +21,7 @@ std::vector<std::string> int_to_binary(int number);
 // @param str The string representation of the logical expression. String needs to have parentheses added.
 // @return A vector of vectors of strings, where each inner vector represents a row in the truth table.
 std::vector<std::vector<std::string>> create_table(const std::string& str);
+
+// Prints a truth table to the console.
+// @param table The truth table to print, represented as a vector of vectors of strings.
+void print_table(const std::vector<std::vector<std::string>>& table);
