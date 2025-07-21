@@ -48,6 +48,36 @@ std::string latex_to_logic(const std::string& latex) {
     return logic;
 }
 
+std::string logic_to_latex(const std::string& logic) {
+    std::string latex;
+    size_t i = 0;
+
+    while (i < logic.size()) {
+        if (logic.substr(i, 3) == "<->") {
+            latex += "\\equiv";
+            i += 3;
+        } else if (logic.substr(i, 2) == "->") {
+            latex += "\\implies";
+            i += 2;
+        } else if (logic[i] == '&') {
+            latex += "\\land";
+            i++;
+        } else if (logic[i] == '|') {
+            latex += "\\lor";
+            i++;
+        } else if (logic[i] == '!') {
+            latex += "\\lnot";
+            i++;
+        } else {
+            latex += logic[i];
+            i++;
+        }
+    }
+
+    return latex;
+}
+
+
 std::string read_file(const std::string& filename) {
     std::ifstream file(filename);
     std::string content;
@@ -63,5 +93,29 @@ std::string read_file(const std::string& filename) {
 
     file.close();
     return content;
+
+}
+
+void guardar_resultado_latex(const std::string& original_latex, const std::string& result_latex) {
+    std::ofstream archivo("salida.tex");
+    if (!archivo.is_open()) {
+        std::cerr << "No se pudo crear el archivo salida.tex" << std::endl;
+        return;
+    }
+
+    archivo << "\\documentclass{article}\n";
+    archivo << "\\usepackage{amsmath}\n";
+    archivo << "\\begin{document}\n\n";
+
+    archivo << "\\textbf{Fórmula original en LaTeX:}\n";
+    archivo << "\\[\n" << original_latex << "\n\\]\n\n";
+
+    archivo << "\\textbf{Versión lógica convertida:}\n";
+    archivo << "\\[\n" << result_latex << "\n\\]\n\n";
+
+    archivo << "\\end{document}\n";
+    archivo.close();
+
+    std::cout << "Resultado guardado en salida.tex\n";
 }
 

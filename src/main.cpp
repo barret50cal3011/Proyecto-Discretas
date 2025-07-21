@@ -15,11 +15,6 @@ int main() {
     }
     // Display the LaTeX input
     std::cout << "Fórmula LaTeX: " << latex_input << std::endl;
-    
-    if (latex_input.find("\\documentclass") != std::string::npos) {
-        std::cerr << "El archivo contiene un documento LaTeX completo. Por favor, proporciona solo la fórmula.\n";
-        return 1;
-    }
     // Convert LaTeX to logic
     std::string logic_equation = latex_to_logic(latex_input);
     std::cout << "Convertida a lógica: " << logic_equation << std::endl;
@@ -29,6 +24,8 @@ int main() {
     std::string result = tokens_to_string(tokens_with_parentheses);
 
     std::cout << "Parsed and formatted equation: " << result << std::endl;
+    std::string result_latex = logic_to_latex(result);
+    guardar_resultado_latex(latex_input, result_latex);
 
     return 0;
 }
