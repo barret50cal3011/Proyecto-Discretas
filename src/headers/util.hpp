@@ -25,3 +25,6 @@ std::vector<std::vector<std::string>> create_table(const std::string& str);
 // Prints a truth table to the console.
 // @param table The truth table to print, represented as a vector of vectors of strings.
 void print_table(const std::vector<std::vector<std::string>>& table);
+
+
+std::string read_file(const std::string& filename);

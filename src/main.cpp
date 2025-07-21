@@ -3,21 +3,32 @@
 #include <iostream>
 
 #include "interpreter.hpp"
+#include "util.hpp"
 
 int main() {
-    std::string equation = "!c & (a | b) -> (d <-> e), f, g";
+    // read file containing LaTeX input
+    std::string latex_input = read_file("latex.txt");
+
+    if (latex_input.empty()) {
+        std::cerr << "No se pudo leer el archivo de entrada.\n";
+        return 1;
+    }
+    // Display the LaTeX input
+    std::cout << "Fórmula LaTeX: " << latex_input << std::endl;
     
-    // Parse the equation into tokens
-    std::vector<std::string> tokened_equation = parseInterpreter(equation);
-    
-    // Add parentheses to the tokens
+    if (latex_input.find("\\documentclass") != std::string::npos) {
+        std::cerr << "El archivo contiene un documento LaTeX completo. Por favor, proporciona solo la fórmula.\n";
+        return 1;
+    }
+    // Convert LaTeX to logic
+    std::string logic_equation = latex_to_logic(latex_input);
+    std::cout << "Convertida a lógica: " << logic_equation << std::endl;
+
+    std::vector<std::string> tokened_equation = parseInterpreter(logic_equation);
     std::vector<std::string> tokens_with_parentheses = add_parentheses(tokened_equation);
-    
-    // Convert tokens back to string for output
     std::string result = tokens_to_string(tokens_with_parentheses);
-    
-    // Output the result
+
     std::cout << "Parsed and formatted equation: " << result << std::endl;
-    
+
     return 0;
 }

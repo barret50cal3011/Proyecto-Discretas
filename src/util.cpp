@@ -6,6 +6,9 @@
 
 #include "util.hpp"
 
+#include <fstream>
+#include <iostream>
+
 bool isSingleLowerAlpha(const std::string& str) {
     return str.size() == 1 && str[0] >= 'a' && str[0] <= 'z';
 }
@@ -13,32 +16,38 @@ bool isSingleLowerAlpha(const std::string& str) {
 
 std::string latex_to_logic(const std::string& latex) {
     std::string logic;
-    for(int i = 0; i < latex.size(); ++i) {
+    size_t i = 0;
+
+    while (i < latex.size()) {
         if (latex[i] == '\\') {
-            i++;
-            if(latex.substr(i, 4) == "land") {
-                logic += "&"; // Convert \and to &
-                i += 4; // Skip the next character
-            } else if(latex.substr(i, 3) == "lor") {
-                logic += "|"; // Convert \or to |
-                i += 3; // Skip the next character
-            } else if(latex.substr(i, 4) == "lnot") {
-                logic += "!"; // Convert \not to !
-                i += 4; // Skip the next character
-            } else if(latex.substr(i, 7) == "implies") {
-                logic += "->"; // Convert \implies to ->
-                i += 7; // Skip the next character
-            } else if(latex.substr(i, 3) == "iff") {
-                logic += "<->"; // Convert \equiv to <-> 
-                i += 3; // Skip the next two characters
-            } else{
-                throw std::invalid_argument("Unknown LaTeX command, error at position: \\" + i);
+            // Detectar comandos de LaTeX
+            if (latex.compare(i, 5, "\\lnot") == 0) {
+                logic += "!";
+                i += 5;
+            } else if (latex.compare(i, 5, "\\land") == 0) {
+                logic += "&";
+                i += 5;
+            } else if (latex.compare(i, 4, "\\lor") == 0) {
+                logic += "|";
+                i += 4;
+            } else if (latex.compare(i, 8, "\\implies") == 0) {
+                logic += "->";
+                i += 8;
+            } else if (latex.compare(i, 7, "\\equiv") == 0) {
+                logic += "<->";
+                i += 7;
+            } else {
+                // Si no es un comando conocido, solo se agrega el backslash
+                logic += "\\";
+                i++;
             }
-            
         } else {
-            logic += latex[i]; // Add regular characters directly
+            // Agrega directamente cualquier otro carácter (como variables, paréntesis, comas, etc.)
+            logic += latex[i];
+            i++;
         }
     }
+
     return logic;
 }
 
@@ -61,14 +70,14 @@ std::vector<std::vector<std::string>> create_table(const std::string& str) {
     std::vector<std::vector<std::string>> table;
     // find all the variables in the string
     std::vector<std::string> variables;
-    for (char c : str) {
+    for(char c : str) {
         if (isSingleLowerAlpha(std::string(1, c)) && std::find(variables.begin(), variables.end(), std::string(1, c)) == variables.end()) {
             variables.push_back(std::string(1, c));
         }
     }
 
     std::vector<std::string> variable_row;
-    for (const auto& var: variables) {
+    for(const auto& var: variables) {
         variable_row.push_back(var);
     }
     table.push_back(variable_row); // Add the header row with variable names
@@ -76,7 +85,7 @@ std::vector<std::vector<std::string>> create_table(const std::string& str) {
     std::vector<std::vector<std::string>> table;
     int num_rows = 1 << variables.size(); // 2^n rows for n variables
 
-    for (int i = 0; i < num_rows; ++i) {
+    for(int i = 0; i < num_rows; i++) {
         std::vector<std::string> row;
         std::vector<std::string> digits = int_to_binary(i);
         row.insert(row.end(), digits.begin(), digits.end());
@@ -96,3 +105,22 @@ void print_table(const std::vector<std::vector<std::string>>& table) {
 
     std::cout << out;
 }
+
+
+std::string read_file(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string content;
+    if (!file.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << filename << std::endl;
+        return "";
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        content += line + " ";
+    }
+
+    file.close();
+    return content;
+}
+
