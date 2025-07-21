@@ -51,7 +51,7 @@ std::string latex_to_logic(const std::string& latex) {
     return logic;
 }
 
-<<<<<<< HEAD
+
 std::string logic_to_latex(const std::string& logic) {
     std::string latex;
     size_t i = 0;
@@ -82,7 +82,7 @@ std::string logic_to_latex(const std::string& logic) {
 }
 
 
-=======
+
 std::vector<std::string> int_to_binary(int number) {
     std::vector<std::string> binary_digits;
     while (number > 0) {
@@ -96,7 +96,7 @@ std::vector<std::string> int_to_binary(int number) {
     return binary_digits;
 }
 
->>>>>>> 91552d18dca9c368f7a3bd388e2bed696fb06279
+
 std::string read_file(const std::string& filename) {
     std::ifstream file(filename);
     std::string content;
