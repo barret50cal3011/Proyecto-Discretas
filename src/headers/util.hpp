@@ -11,10 +11,29 @@ bool isSingleLowerAlpha(const std::string& str);
 // @param latex The LaTeX formatted string to convert.
 // @return A string representing the logical expression.
 std::string latex_to_logic(const std::string& latex);
+
+// Converts an int into a binary vector representation.
+// @param int that will be converted.
+// @return A vector of strings, where each string is a binary digit of the integer.
+std::vector<std::string> int_to_binary(int number);
+
+
 std::string read_file(const std::string& filename);
+<<<<<<< HEAD
 // Converts a logical expression back to LaTeX format.
 // @param logic The logical expression to convert.
 // @return A string representing the LaTeX formatted expression.
 std::string logic_to_latex(const std::string& logic);
 // Saves the result in LaTeX format to a file.
 void guardar_resultado_latex(const std::string& latex_input, const std::string& result_latex);
+=======
+
+// Removes unecesary parentheses from a logical expression string.
+// @param str The string representation of the logical expression.
+// @return A string with unnecessary parentheses removed.
+// @note This function modifies str.
+std::vector<std::string> purge_parentheses(std::vector<std::string> str);
+
+
+
+>>>>>>> 91552d18dca9c368f7a3bd388e2bed696fb06279

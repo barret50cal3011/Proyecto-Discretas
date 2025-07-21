@@ -1,5 +1,8 @@
 #include <string>
 #include <vector>
+#include <stdexcept>
+#include <algorithm>
+#include <iostream>
 
 #include "util.hpp"
 
@@ -48,6 +51,7 @@ std::string latex_to_logic(const std::string& latex) {
     return logic;
 }
 
+<<<<<<< HEAD
 std::string logic_to_latex(const std::string& logic) {
     std::string latex;
     size_t i = 0;
@@ -78,6 +82,21 @@ std::string logic_to_latex(const std::string& logic) {
 }
 
 
+=======
+std::vector<std::string> int_to_binary(int number) {
+    std::vector<std::string> binary_digits;
+    while (number > 0) {
+        binary_digits.push_back(std::to_string(number % 2));
+        number = number >> 1;
+    }
+
+    // Reverse the binary digits to get the correct order
+    std::reverse(binary_digits.begin(), binary_digits.end());
+
+    return binary_digits;
+}
+
+>>>>>>> 91552d18dca9c368f7a3bd388e2bed696fb06279
 std::string read_file(const std::string& filename) {
     std::ifstream file(filename);
     std::string content;
@@ -119,3 +138,26 @@ void guardar_resultado_latex(const std::string& original_latex, const std::strin
     std::cout << "Resultado guardado en salida.tex\n";
 }
 
+
+std::vector<std::string> purge_parentheses(std::vector<std::string> tokens) {
+
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        if (tokens[i] == "(" && tokens[i + 1] == "(") {
+            for(size_t j = i + 1; j < tokens.size(); ++j) {
+                int depth = 1;
+                if (tokens[j] == "(") {
+                    depth++;
+                } else if (tokens[j] == ")") {
+                    depth--;
+                }
+                if (depth == 0 && tokens[j] == ")" && tokens[j - 1] == ")") {
+                    // Found the matching closing parenthesis
+                    tokens.erase(tokens.begin() + j);
+                    tokens.erase(tokens.begin() + i);
+                    break;
+                }
+            }
+        }
+    }
+    return tokens;
+}

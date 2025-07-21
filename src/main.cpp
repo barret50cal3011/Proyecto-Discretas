@@ -21,11 +21,13 @@ int main() {
 
     std::vector<std::string> tokened_equation = parseInterpreter(logic_equation);
     std::vector<std::string> tokens_with_parentheses = add_parentheses(tokened_equation);
+    tokens_with_parentheses = purge_parentheses(tokens_with_parentheses);
     std::string result = tokens_to_string(tokens_with_parentheses);
 
     std::cout << "Parsed and formatted equation: " << result << std::endl;
     std::string result_latex = logic_to_latex(result);
     guardar_resultado_latex(latex_input, result_latex);
+
 
     return 0;
 }
