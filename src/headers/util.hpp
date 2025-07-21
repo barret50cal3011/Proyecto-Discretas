@@ -17,14 +17,14 @@ std::string latex_to_logic(const std::string& latex);
 // @return A vector of strings, where each string is a binary digit of the integer.
 std::vector<std::string> int_to_binary(int number);
 
-// Creates a truth table from a given string representation of a logical expression.
-// @param str The string representation of the logical expression. String needs to have parentheses added.
-// @return A vector of vectors of strings, where each inner vector represents a row in the truth table.
-std::vector<std::vector<std::string>> create_table(const std::string& str);
-
-// Prints a truth table to the console.
-// @param table The truth table to print, represented as a vector of vectors of strings.
-void print_table(const std::vector<std::vector<std::string>>& table);
-
 
 std::string read_file(const std::string& filename);
+
+// Removes unecesary parentheses from a logical expression string.
+// @param str The string representation of the logical expression.
+// @return A string with unnecessary parentheses removed.
+// @note This function modifies str.
+std::vector<std::string> purge_parentheses(std::vector<std::string> str);
+
+
+

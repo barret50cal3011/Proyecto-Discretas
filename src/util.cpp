@@ -64,49 +64,6 @@ std::vector<std::string> int_to_binary(int number) {
     return binary_digits;
 }
 
-
-std::vector<std::vector<std::string>> create_table(const std::string& str) {
-
-    std::vector<std::vector<std::string>> table;
-    // find all the variables in the string
-    std::vector<std::string> variables;
-    for(char c : str) {
-        if (isSingleLowerAlpha(std::string(1, c)) && std::find(variables.begin(), variables.end(), std::string(1, c)) == variables.end()) {
-            variables.push_back(std::string(1, c));
-        }
-    }
-
-    std::vector<std::string> variable_row;
-    for(const auto& var: variables) {
-        variable_row.push_back(var);
-    }
-    table.push_back(variable_row); // Add the header row with variable names
-    
-    std::vector<std::vector<std::string>> table;
-    int num_rows = 1 << variables.size(); // 2^n rows for n variables
-
-    for(int i = 0; i < num_rows; i++) {
-        std::vector<std::string> row;
-        std::vector<std::string> digits = int_to_binary(i);
-        row.insert(row.end(), digits.begin(), digits.end());
-        table.push_back(row);
-    }
-}
-
-
-void print_table(const std::vector<std::vector<std::string>>& table) {
-    std::string out;
-    for (const auto& row : table) {
-        for (const auto& cell : row) {
-            out.append(cell + " ");
-        }
-        out.append("\n");
-    }
-
-    std::cout << out;
-}
-
-
 std::string read_file(const std::string& filename) {
     std::ifstream file(filename);
     std::string content;
@@ -124,3 +81,26 @@ std::string read_file(const std::string& filename) {
     return content;
 }
 
+
+std::vector<std::string> purge_parentheses(std::vector<std::string> tokens) {
+
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        if (tokens[i] == "(" && tokens[i + 1] == "(") {
+            for(size_t j = i + 1; j < tokens.size(); ++j) {
+                int depth = 1;
+                if (tokens[j] == "(") {
+                    depth++;
+                } else if (tokens[j] == ")") {
+                    depth--;
+                }
+                if (depth == 0 && tokens[j] == ")" && tokens[j - 1] == ")") {
+                    // Found the matching closing parenthesis
+                    tokens.erase(tokens.begin() + j);
+                    tokens.erase(tokens.begin() + i);
+                    break;
+                }
+            }
+        }
+    }
+    return tokens;
+}
