@@ -17,7 +17,9 @@ std::string latex_to_logic(const std::string& latex);
 // @return A vector of strings, where each string is a binary digit of the integer.
 std::vector<std::string> int_to_binary(int number);
 
-
+// Reads the contents of a text file into a string.
+// @param filename The name of the file to read.
+// @return A string containing the contents of the file.
 std::string read_file(const std::string& filename);
 
 // Converts a logical expression back to LaTeX format.
