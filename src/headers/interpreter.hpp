@@ -23,5 +23,7 @@ std::vector<std::string> parseInterpreter(const std::string& equation);
 // @return A vector of strings with parentheses added to respect logical precedence.
 std::vector<std::string> add_parentheses(const std::vector<std::string>& tokens);
 
-
+// Converts the vector of logic tokens back into a single string representation of the formula.
+// @param tokens A vector of strings representing the logic tokens.
+// @return A string representing the full logic formula reconstructed from the tokens.
 std::string tokens_to_string(const std::vector<std::string>& tokens);
