@@ -14,7 +14,10 @@ Las prioridades de los operadores lógicos, de mayor a menor, son las siguientes
 
 Esto significa que, por ejemplo, una negación se debe aplicar antes que una conjunción, y una implicación debe agrupar sus términos antes que cualquier disyunción que esté en el mismo nivel.
 
-
+## Manuel De Usuario
+1. Pon tu fórmula lógica con sintaxix Latex en el archivo latex.txt
+2. Ejecuta el archivo boolean.exe
+3. Abre el archivo salida.tex con tu lector de latex preferido y podras ver tu fórmula lógica original y la bien formada
 ### Integrantes
 - Daniel Barreto Calvo
 - Jorley Snehider Salas Rocha
